@@ -17,14 +17,14 @@ def move(my_history, their_history, my_score, their_score):
     Make my move.
     Returns 'c' or 'b'. 
     '''
+    b_counter = 0
+    c_counter = 0
     if my_score % 20== 0:
         return 'c'
     if len(their_history > 2):
         for i in range(len(their_history)):
-            b_counter = 0  
             if their_history[i] == 'b':
                 b_counter += 1
-            c_counter = 0
             if their_history[i] == 'c':
                 c_counter += 1 
             if b_counter > c_counter:
