@@ -26,7 +26,12 @@ def move(my_history, their_history, my_score, their_score):
     # Analyze my_history and their_history and/or my_score and their_score.
     # Decide whether to return 'c' or 'b'.
     
-    return 'b'
+    if len(their_history)>0 and their_history[len(their_history)-1] == 'b':
+        return 'b'
+    if my_score < their_score:
+        return 'b'
+    else:
+        return 'c'
 
     
 def test_move(my_history, their_history, my_score, their_score, result):
@@ -48,14 +53,14 @@ def test_move(my_history, their_history, my_score, their_score, result):
 if __name__ == '__main__':
      
     # Test 1: Betray on first move.
-    if test_move(my_history='',
-              their_history='', 
+    if test_move(my_history='b',
+              their_history='b', 
               my_score=0,
               their_score=0,
               result='b'):
          print 'Test passed'
      # Test 2: Continue betraying if they collude despite being betrayed.
-    test_move(my_history='bbb',
+    if test_move(my_history='bbc',
               their_history='ccc', 
               # Note the scores are for testing move().
               # The history and scores don't need to match unless
@@ -64,5 +69,6 @@ if __name__ == '__main__':
               # 300 to me and -750 to them. This test will pass if and only if
               # move('bbb', 'ccc', 0, 0) returns 'b'.
               my_score=0, 
-              their_score=0,
-              result='b')             
+              their_score=200,
+              result='b'):
+          print 'Test passed'            
