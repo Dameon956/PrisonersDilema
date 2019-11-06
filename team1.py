@@ -7,59 +7,89 @@ import random
 #     move: A function that returns 'c' or 'b'
 ####
 
-team_name = 'Jacob?' # Only 10 chars displayed.
-strategy_name = 'No_Idea_Yet'
-strategy_description = 'In_The_Process_Of'
+team_name = 'Gamblers' # Only 10 chars displayed.
+strategy_name = 'Statistical Logic'
+strategy_description = "Bases off of other players' moves"
 
-def move(my_history, their_history, my_score, their_score):
-    ''' Arguments accepted: my_history, their_history are strings.
-    my_score, their_score are ints.
+def move(myHistory, theirHistory, myScore, theirScore):
+    ''' Arguments accepted: myHistory, theirHistory are strings.
+    myScore, theirScore are ints.
     
     Make my move.
     Returns 'c' or 'b'. 
     '''
     Time = 0
-    if len(my_history)==0:
+    if len(myHistory)==0:
         Time = 8
     else:
         Time = random.randint(1,24)
-    if len(my_history) == 0:
+    if len(myHistory) == 0:
         return 'b'
     else:
         if Time > 12:
             return 'b'
-        elif their_history[len(their_history)-1] == 'b':
+        elif theirHistory[len(theirHistory)-1] == 'b':
             return 'b'
-        elif my_score < their_score + 150:
+        elif myScore < theirScore + 150:
             return 'b'
         else:
             return 'c'
-        
             
-
-    # my_history: a string with one letter (c or b) per round that has been played with this opponent.
-    # their_history: a string of the same length as history, possibly empty. 
-    # The first round between these two players is my_history[0] and their_history[0].
-    # The most recent round is my_history[-1] and their_history[-1].
+def ourMove(myHistory, theirHistory, myScore, theirScore):
+    if len(myHistory)==0:
+        return 'b'
+    elif theirHistory[-1]=='c' and theirHistory[-2]:
+        return 'c'
+    elif len(myHistory)==1 and theirHistory[-1]=='c':
+        if random.randint(1,101)<=50:
+            return 'c'
+        else:
+            return 'b'
+    else:
+        if theirHistory[-1]=='b' and theirHistory[-2]=='b':
+            return 'b'
+        elif theirHistory[-1]=='c' and myHistory[-1]=='c':
+            if random.randint(1,101)>=15:
+                return 'c'
+            else: return 'b'
+        elif theirHistory[-1]=='b' and myHistory[-1]=='b':
+            return 'b'
+        elif theirHistory[-1]=='b' and myHistory[-1]=='c':
+            return 'b'
+        elif theirHistory[-1]=='c' and myHistory[-1]=='b':
+            if random.randint(1,101)<=25:
+                return 'c'
+            else:
+                return 'b'
+        
+        
     
-    # Analyze my_history and their_history and/or my_score and their_score.
+    
+    
+
+    # myHistory: a string with one letter (c or b) per round that has been played with this opponent.
+    # theirHistory: a string of the same length as history, possibly empty. 
+    # The first round between these two players is myHistory[0] and theirHistory[0].
+    # The most recent round is myHistory[-1] and theirHistory[-1].
+    
+    # Analyze myHistory and theirHistory and/or myScore and theirScore.
     # Decide whether to return 'c' or 'b'.
     
-    return 'c'
+    return 'b'
 
     
-def test_move(my_history, their_history, my_score, their_score, result):
-    '''calls move(my_history, their_history, my_score, their_score)
+def test_move(myHistory, theirHistory, myScore, theirScore, result):
+    '''calls move(myHistory, theirHistory, myScore, theirScore)
     from this module. Prints error if return value != result.
     Returns True or False, dpending on whether result was as expected.
     '''
-    real_result = move(my_history, their_history, my_score, their_score)
+    real_result = move(myHistory, theirHistory, myScore, theirScore)
     if real_result == result:
         return True
     else:
         print("move(" +
-            ", ".join(["'"+my_history+"'", "'"+their_history+"'",
-                       str(my_score), str(their_score)])+
+            ", ".join(["'"+myHistory+"'", "'"+theirHistory+"'",
+                       str(myScore), str(theirScore)])+
             ") returned " + "'" + real_result + "'" +
             " and should have returned '" + result + "'")
         return False
@@ -67,21 +97,27 @@ def test_move(my_history, their_history, my_score, their_score, result):
 if __name__ == '__main__':
      
     # Test 1: Betray on first move.
-    if test_move(my_history='bbc',
-              their_history='bbc', 
-              my_score=155,
-              their_score=0,
-              result='c'):
+    if test_move(myHistory='bbb',
+              theirHistory='bbb', 
+              myScore=155,
+              theirScore=0,
+              result='b'):
+         print 'Test passed'
+    if test_move(myHistory='bc',
+              theirHistory='cc', 
+              myScore=155,
+              theirScore=0,
+              result='b'):
          print 'Test passed'
      # Test 2: Continue betraying if they collude despite being betrayed.
-    test_move(my_history='bbb',
-              their_history='ccc', 
+    test_move(myHistory='bbb',
+              theirHistory='ccc', 
               # Note the scores are for testing move().
               # The history and scores don't need to match unless
               # that is relevant to the test of move(). Here,
               # the simulation (if working correctly) would have awarded 
               # 300 to me and -750 to them. This test will pass if and only if
               # move('bbb', 'ccc', 0, 0) returns 'b'.
-              my_score=0, 
-              their_score=0,
+              myScore=0, 
+              theirScore=0,
               result='b')             
